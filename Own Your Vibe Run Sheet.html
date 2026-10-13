@@ -1,0 +1,505 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Own Your Vibe Run Sheet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&display=swap">
+
+<style>
+:root{
+  --bg:#F1F4F3;
+  --panel:#FFFFFF;
+  --panel-2:#F7FAF9;
+  --ink:#141D1B;
+  --ink-2:#3B4A47;
+  --muted:#6B7A76;
+  --line:#D6DEDB;
+  --line-strong:#B9C4C0;
+  --music:#B0741A;
+  --music-soft:#F3E5CD;
+  --commerce:#0F6B70;
+  --commerce-soft:#D5E9EA;
+  --rest:#8A9894;
+  --rest-soft:#E4E9E8;
+  --done:#2E7A52;
+  --done-soft:#DCEDE4;
+  --focus:#0F6B70;
+  --shadow:0 1px 2px rgba(20,29,27,.07), 0 6px 18px -12px rgba(20,29,27,.25);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#101617;
+    --panel:#192123;
+    --panel-2:#1E272A;
+    --ink:#E8EFED;
+    --ink-2:#C2CECB;
+    --muted:#8E9E9A;
+    --line:#2B3639;
+    --line-strong:#3B4A4E;
+    --music:#E0A442;
+    --music-soft:#3A2E17;
+    --commerce:#45B3B9;
+    --commerce-soft:#12363A;
+    --rest:#6E7E7B;
+    --rest-soft:#232D30;
+    --done:#5CC08A;
+    --done-soft:#173327;
+    --focus:#45B3B9;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 22px -14px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#101617;
+  --panel:#192123;
+  --panel-2:#1E272A;
+  --ink:#E8EFED;
+  --ink-2:#C2CECB;
+  --muted:#8E9E9A;
+  --line:#2B3639;
+  --line-strong:#3B4A4E;
+  --music:#E0A442;
+  --music-soft:#3A2E17;
+  --commerce:#45B3B9;
+  --commerce-soft:#12363A;
+  --rest:#6E7E7B;
+  --rest-soft:#232D30;
+  --done:#5CC08A;
+  --done-soft:#173327;
+  --focus:#45B3B9;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 22px -14px rgba(0,0,0,.7);
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:"Source Sans 3",system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:15px; line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1080px;margin:0 auto;padding-inline:18px;padding-block:26px 56px}
+h1,h2,h3{font-family:Archivo,"Source Sans 3",system-ui,sans-serif;margin:0;text-wrap:balance}
+.mono{font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;font-variant-numeric:tabular-nums}
+
+/* ---------- masthead ---------- */
+.mast{display:flex;flex-wrap:wrap;gap:16px 22px;align-items:flex-end;justify-content:space-between;
+  border-bottom:2px solid var(--ink);padding-bottom:14px;margin-bottom:22px}
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+h1{font-size:clamp(26px,4.4vw,38px);font-weight:800;letter-spacing:-.02em;line-height:1.05}
+.datestamp{text-align:right}
+.datestamp .d{font-family:Archivo,sans-serif;font-size:17px;font-weight:700}
+.datestamp .t{font-size:12px;color:var(--muted);font-family:"IBM Plex Mono",monospace}
+
+/* ---------- mode switch ---------- */
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:18px}
+.seg{display:inline-flex;border:1px solid var(--line-strong);border-radius:3px;overflow:hidden;background:var(--panel)}
+.seg button{
+  appearance:none;border:0;background:transparent;cursor:pointer;
+  font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.04em;
+  color:var(--ink-2);padding:8px 13px;border-right:1px solid var(--line);
+  transition:background .14s,color .14s}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg);font-weight:600}
+.seg button:hover:not([aria-pressed="true"]){background:var(--panel-2)}
+.ghost{appearance:none;background:transparent;border:1px solid var(--line-strong);border-radius:3px;
+  color:var(--muted);font-family:"IBM Plex Mono",monospace;font-size:12px;padding:8px 12px;cursor:pointer}
+.ghost:hover{color:var(--ink);border-color:var(--ink)}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+
+/* ---------- meters ---------- */
+.meters{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;
+  background:var(--line);border:1px solid var(--line);margin-bottom:20px}
+.meter{background:var(--panel);padding:12px 14px}
+.meter .k{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.meter .v{font-family:Archivo,sans-serif;font-size:23px;font-weight:700;letter-spacing:-.01em;margin-top:2px;font-variant-numeric:tabular-nums}
+.meter .s{font-size:12px;color:var(--muted)}
+.meter.big .v{color:var(--done)}
+
+/* ---------- arrangement ruler ---------- */
+.ruler-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px}
+.ruler-head h2{font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-family:"IBM Plex Mono",monospace;color:var(--muted)}
+.ruler-scroll{overflow-x:auto;padding-bottom:6px}
+.ruler{display:flex;min-width:640px;height:44px;border:1px solid var(--line-strong);background:var(--panel)}
+.blk{position:relative;border-right:1px solid var(--panel);display:flex;align-items:center;justify-content:center;
+  cursor:pointer;min-width:3px;transition:filter .14s}
+.blk:last-child{border-right:0}
+.blk span{font-family:"IBM Plex Mono",monospace;font-size:10px;font-weight:600;color:#fff;
+  mix-blend-mode:normal;white-space:nowrap;overflow:hidden;padding:0 2px}
+.blk.music{background:var(--music)}
+.blk.commerce{background:var(--commerce)}
+.blk.rest{background:var(--rest)}
+.blk.is-done{background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.42) 0 4px,transparent 4px 8px)}
+.blk:hover{filter:brightness(1.12)}
+.ticks{display:flex;min-width:640px;margin-top:4px}
+.tick{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--muted);white-space:nowrap}
+.legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:8px;font-size:12px;color:var(--muted)}
+.legend i{display:inline-block;width:10px;height:10px;margin-right:6px;vertical-align:-1px}
+
+/* ---------- run list ---------- */
+.pipes{display:grid;gap:26px;margin-top:30px}
+.pipe > header{display:flex;align-items:baseline;gap:10px;padding-bottom:8px;margin-bottom:0;
+  border-bottom:1px solid var(--line-strong)}
+.pipe h2{font-size:17px;font-weight:700;letter-spacing:-.01em}
+.pipe .count{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--muted);margin-left:auto}
+.rail{width:3px;align-self:stretch}
+.rail.music{background:var(--music)} .rail.commerce{background:var(--commerce)}
+
+.rows{list-style:none;margin:0;padding:0}
+.row{display:grid;grid-template-columns:26px 62px 1fr auto;gap:12px;align-items:start;
+  padding:11px 4px 11px 2px;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:0}
+.row.rest-row{opacity:.72}
+.row label.box{display:block;position:relative;width:19px;height:19px;margin-top:2px;cursor:pointer}
+.row input{position:absolute;opacity:0;width:19px;height:19px;margin:0;cursor:pointer}
+.tickbox{display:block;width:19px;height:19px;border:1.5px solid var(--line-strong);border-radius:2px;background:var(--panel)}
+.row input:checked + .tickbox{background:var(--done);border-color:var(--done)}
+.row input:checked + .tickbox::after{content:"";position:absolute;left:6px;top:2px;width:5px;height:11px;
+  border:solid #fff;border-width:0 2px 2px 0;transform:rotate(42deg)}
+.row input:focus-visible + .tickbox{outline:2px solid var(--focus);outline-offset:2px}
+.chip{font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;letter-spacing:.02em;
+  padding:3px 6px;border-radius:2px;white-space:nowrap;display:inline-block;margin-top:1px}
+.chip.music{background:var(--music-soft);color:var(--music)}
+.chip.commerce{background:var(--commerce-soft);color:var(--commerce)}
+.chip.rest{background:var(--rest-soft);color:var(--muted)}
+.task{font-weight:600;font-size:15px;line-height:1.35}
+.row.is-done .task{color:var(--muted);text-decoration:line-through;text-decoration-thickness:1px}
+.sub{font-size:12.5px;color:var(--muted);margin-top:2px}
+.gate{display:inline-block;margin-top:5px;font-family:"IBM Plex Mono",monospace;font-size:10.5px;
+  letter-spacing:.06em;color:var(--ink-2);border:1px dashed var(--line-strong);padding:2px 6px;border-radius:2px}
+.gate b{color:var(--commerce);font-weight:600}
+.clock{text-align:right;font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink-2);
+  font-variant-numeric:tabular-nums;white-space:nowrap;padding-top:2px}
+.clock .dur{display:block;font-size:11px;color:var(--muted)}
+
+/* ---------- notes + history ---------- */
+.split{display:grid;grid-template-columns:1fr;gap:22px;margin-top:32px}
+@media(min-width:760px){ .split{grid-template-columns:1.15fr .85fr} }
+.card{border:1px solid var(--line);background:var(--panel);padding:15px 16px;box-shadow:var(--shadow)}
+.card h3{font-size:12px;font-family:"IBM Plex Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:9px}
+textarea{width:100%;min-height:104px;resize:vertical;background:var(--panel-2);color:var(--ink);
+  border:1px solid var(--line);border-radius:2px;padding:10px;font-family:"Source Sans 3",sans-serif;font-size:14px;line-height:1.5}
+textarea::placeholder{color:var(--muted)}
+.hist{display:flex;align-items:flex-end;gap:5px;height:74px;margin-top:4px}
+.hbar{flex:1;min-width:6px;background:var(--line);position:relative;display:flex;align-items:flex-end}
+.hbar i{display:block;width:100%;background:var(--done);min-height:2px}
+.hlabels{display:flex;gap:5px;margin-top:5px}
+.hlabels span{flex:1;min-width:6px;text-align:center;font-family:"IBM Plex Mono",monospace;font-size:9px;color:var(--muted)}
+.empty{font-size:13px;color:var(--muted);font-style:italic}
+
+.notes-list{list-style:none;margin:0;padding:0;font-size:13px}
+.notes-list li{padding:7px 0;border-bottom:1px solid var(--line);color:var(--ink-2)}
+.notes-list li:last-child{border-bottom:0}
+.notes-list b{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--music);font-weight:600}
+
+footer{margin-top:38px;padding-top:14px;border-top:1px solid var(--line);
+  font-size:12px;color:var(--muted);display:flex;flex-wrap:wrap;gap:8px 18px;justify-content:space-between}
+.status{font-family:"IBM Plex Mono",monospace;font-size:11px}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+@media(max-width:520px){
+  .row{grid-template-columns:26px 1fr;gap:9px}
+  .row .chip{grid-column:2;margin-bottom:-4px}
+  .row .clock{grid-column:2;text-align:left;padding-top:4px}
+}
+</style>
+
+<div class="wrap">
+
+  <div class="mast">
+    <div>
+      <div class="eyebrow">Own Your Vibe &middot; Production SOP v1.0</div>
+      <h1>Daily Run Sheet</h1>
+    </div>
+    <div class="datestamp">
+      <div class="d mono" id="today">—</div>
+      <div class="t" id="weekday">—</div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <div class="seg" role="group" aria-label="Schedule">
+      <button id="m-full" data-mode="full" aria-pressed="true">FULL DAY</button>
+      <button id="m-dayA" data-mode="dayA" aria-pressed="false">DAY A · PRODUCTION</button>
+      <button id="m-dayB" data-mode="dayB" aria-pressed="false">DAY B · COMMERCE</button>
+    </div>
+    <button class="ghost" id="reset">Clear today</button>
+    <span class="status" id="status" aria-live="polite"></span>
+  </div>
+
+  <div class="meters" id="meters"></div>
+
+  <div class="ruler-head">
+    <h2>Arrangement — the day laid out to scale</h2>
+    <span class="mono" style="font-size:11px;color:var(--muted)" id="span">—</span>
+  </div>
+  <div class="ruler-scroll">
+    <div class="ruler" id="ruler"></div>
+    <div class="ticks" id="ticks"></div>
+  </div>
+  <div class="legend">
+    <span><i style="background:var(--music)"></i>Pipeline A — music</span>
+    <span><i style="background:var(--commerce)"></i>Pipeline B — commerce</span>
+    <span><i style="background:var(--rest)"></i>Break</span>
+    <span><i style="background:var(--done);background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.5) 0 4px,transparent 4px 8px)"></i>Hatched = done</span>
+  </div>
+
+  <div class="pipes" id="pipes"></div>
+
+  <div class="split">
+    <div class="card">
+      <h3>Session notes — today</h3>
+      <textarea id="note" placeholder="Track title, theme for the day, what the mix needed, anything that went wrong."></textarea>
+    </div>
+    <div class="card">
+      <h3>Last 14 sessions</h3>
+      <div class="hist" id="hist"></div>
+      <div class="hlabels" id="histlab"></div>
+      <p class="empty" id="histempty">No sessions recorded yet. Tick a step and today becomes the first.</p>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:22px">
+    <h3>Standing corrections — carried from the SOP</h3>
+    <ul class="notes-list">
+      <li><b>A13</b> CapCut exports video, not audio. Render the cover-plus-audio piece as MP4 (H.264, 1080&nbsp;px); the .WAV master from Ableton is what goes to DistroKid.</li>
+      <li><b>A12</b> DistroKid needs raster art — PNG or JPG at exactly 3000&nbsp;&times;&nbsp;3000&nbsp;px, RGB, under 10&nbsp;MB. Keep the Canva .SVG as the editable copy only.</li>
+      <li><b>B2</b> The QR code needs a live release URL, so it cannot close on release day. Generate QR codes on a commerce day for whatever went live since the last one.</li>
+      <li><b>A3</b> Start the Mureka generation before opening Word, so the full 30 minutes of lyric editing runs over it.</li>
+      <li><b>B1</b> Three colourways only — White, Black, Brand Purple (PMS&nbsp;2665&nbsp;C). No POD partner matches that Pantone on a blank, so choose each one's nearest purple from a physical sample, not the on-screen swatch.</li>
+    </ul>
+  </div>
+
+  <footer>
+    <span>Steps and durations as documented by Anthony Vispo, 13 September 2026.</span>
+    <span class="status" id="sync">local only</span>
+  </footer>
+</div>
+
+<script>
+/* ------------------------------------------------------------------ data */
+const B = (id, mins, kind, task, tool, steps, gate, note) =>
+  ({id, mins, kind, task, tool, steps, gate, note});
+
+const MODES = {
+  full: { label:"Full day", start:"09:00", blocks:[
+    B("a1", 60,"music","Morning order &amp; inbox review","Printify · Printful · Gelato · Email","A1"),
+    B("a23", 5,"music","Lyric drafted; Mureka generation started","ChatGPT Plus → Mureka AI","A2–A3",null,"Generation then runs unattended"),
+    B("a4", 30,"music","Lyric edited and quality-checked","Microsoft Word Editor","A4","QC-1 · lyric approved","Overlaps the Mureka generation"),
+    B("a57", 10,"music","Remix against the edited lyric; download","Mureka AI Premier","A5–A7","QC-2 · remix matches lyric"),
+    B("a8", 78,"music","Arrangement and mix","Ableton Live 12","A8"),
+    B("a9", 13,"music","Master exported and named","Ableton Live 12","A9","QC-3 · master is clean"),
+    B("br", 42,"rest","Break","—","—"),
+    B("a10", 8,"music","Cover artwork generated","ChatGPT Plus","A10","QC-4 · artwork is text-free"),
+    B("a1112",22,"music","Canva cover built and exported","Canva Pro — 300 DPI","A11–A12","QC-5 · cover meets store spec"),
+    B("a1314",30,"music","Visual rendered; release folder archived","CapCut Premium","A13–A14"),
+    B("a15", 60,"music","DistroKid upload, metadata and scheduling","DistroKid","A15","QC-6 · metadata complete","Declare Human + AI authorship"),
+    B("b1", 90,"commerce","Merchandise mockups — White, Black, Purple × all sizes","Canva Pro","B1","QC-7 · print files valid","Check the art on purple first — it is the least forgiving ground"),
+    B("b2", 30,"commerce","QR code for a release that is already live","Canva QR app","B2",null,"Only if an earlier release has published"),
+    B("b3",210,"commerce","POD upload and storefront sync","Printify · Printful · Gelato → 4 stores","B3","QC-8 · storefronts in sync"),
+    B("b4", 60,"commerce","End-of-day order and inbox sweep","POD partners · Email","B4"),
+  ]},
+  dayA: { label:"Day A — production", start:"08:30", blocks:[
+    B("a1r", 45,"music","Order and inbox review — one consolidated pass","Printify · Printful · Gelato · Email","A1"),
+    B("a23", 5,"music","Lyric drafted; Mureka generation started","ChatGPT Plus → Mureka AI","A2–A3"),
+    B("a4", 30,"music","Lyric edited while the generation runs","Microsoft Word Editor","A4","QC-1 · lyric approved"),
+    B("a57", 10,"music","Remix and download","Mureka AI Premier","A5–A7","QC-2 · remix matches lyric"),
+    B("a89", 95,"music","Arrangement, mix and master export","Ableton Live 12","A8–A9","QC-3 · master is clean"),
+    B("br", 40,"rest","Break","—","—"),
+    B("a10", 10,"music","Cover artwork generated","ChatGPT Plus","A10","QC-4 · artwork is text-free"),
+    B("a1112",25,"music","Canva cover built and exported","Canva Pro — 300 DPI","A11–A12","QC-5 · cover meets store spec"),
+    B("a1314",30,"music","Visual rendered; release folder archived","CapCut Premium","A13–A14"),
+    B("a15", 60,"music","DistroKid upload and scheduling","DistroKid","A15","QC-6 · metadata complete"),
+    B("b4r", 20,"commerce","Closing inbox sweep","POD partners · Email","B4"),
+  ]},
+  dayB: { label:"Day B — commerce", start:"08:30", blocks:[
+    B("a1r", 45,"music","Order and inbox review","Printify · Printful · Gelato · Email","A1"),
+    B("b1b",120,"commerce","Mockups for every release in the batch — White, Black, Purple","Canva Pro","B1","QC-7 · print files valid","Two or three releases together"),
+    B("b2b", 30,"commerce","QR codes for releases now live at the distributor","Canva QR app","B2"),
+    B("br", 40,"rest","Break","—","—"),
+    B("b3b",215,"commerce","POD upload and storefront sync, all releases","Printify · Printful · Gelato → 4 stores","B3","QC-8 · storefronts in sync"),
+    B("b4r", 20,"commerce","Closing inbox sweep","POD partners · Email","B4"),
+  ]},
+};
+
+/* --------------------------------------------------------------- helpers */
+const pad = n => String(n).padStart(2,"0");
+const hhmm = m => pad(Math.floor(m/60)%24)+":"+pad(m%60);
+const dur = m => (m>=60 ? Math.floor(m/60)+"h"+(m%60?" "+(m%60)+"m":"") : m+"m");
+const toMin = t => { const [h,m]=t.split(":").map(Number); return h*60+m; };
+const todayKey = () => { const d=new Date(); return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate()); };
+
+let state = { mode:"full", done:{}, note:"" };
+let db = null, docRef = null, saveTimer = null, history = [];
+const KEY = "oyv-runsheet-" + todayKey();
+
+/* ------------------------------------------------------------- rendering */
+function currentBlocks(){ return MODES[state.mode].blocks; }
+function activeMins(){ return currentBlocks().filter(b=>b.kind!=="rest").reduce((s,b)=>s+b.mins,0); }
+function doneMins(){ return currentBlocks().filter(b=>b.kind!=="rest" && state.done[b.id]).reduce((s,b)=>s+b.mins,0); }
+function doneCount(){ return currentBlocks().filter(b=>b.kind!=="rest" && state.done[b.id]).length; }
+function stepCount(){ return currentBlocks().filter(b=>b.kind!=="rest").length; }
+
+function renderMeters(){
+  const total = activeMins(), done = doneMins(), n = stepCount(), dn = doneCount();
+  const start = toMin(MODES[state.mode].start);
+  const end = start + currentBlocks().reduce((s,b)=>s+b.mins,0);
+  const pct = n ? Math.round(dn/n*100) : 0;
+  document.getElementById("meters").innerHTML = [
+    ["Progress", pct+"%", dn+" of "+n+" blocks ticked", "big"],
+    ["Time logged", dur(done), "of "+dur(total)+" planned", ""],
+    ["Remaining", dur(total-done), (total-done)===0 ? "session complete" : (n-dn)+" blocks still to tick", ""],
+    ["Day ends", hhmm(end), "from a "+MODES[state.mode].start+" start", ""],
+  ].map(([k,v,s,c]) => '<div class="meter '+c+'"><div class="k">'+k+'</div><div class="v mono">'+v+'</div><div class="s">'+s+'</div></div>').join("");
+  document.getElementById("span").textContent = MODES[state.mode].start+" – "+hhmm(end)+" · "+dur(end-start)+" elapsed";
+}
+
+function renderRuler(){
+  const blocks = currentBlocks();
+  const total = blocks.reduce((s,b)=>s+b.mins,0);
+  const ruler = document.getElementById("ruler");
+  ruler.innerHTML = blocks.map(b=>{
+    const w = (b.mins/total*100).toFixed(3);
+    const show = b.mins/total > 0.055 ? b.steps : "";
+    return '<button class="blk '+b.kind+(state.done[b.id]?" is-done":"")+'" style="flex:0 0 '+w+'%" '+
+      'data-id="'+b.id+'" title="'+b.steps+' · '+b.task.replace(/&amp;/g,"&")+' · '+dur(b.mins)+'">'+
+      '<span>'+show+'</span></button>';
+  }).join("");
+  let t = toMin(MODES[state.mode].start);
+  document.getElementById("ticks").innerHTML = blocks.map(b=>{
+    const w=(b.mins/total*100).toFixed(3), label = b.mins/total>0.055 ? hhmm(t) : "";
+    t+=b.mins; return '<span class="tick" style="flex:0 0 '+w+'%">'+label+'</span>';
+  }).join("");
+  ruler.querySelectorAll(".blk").forEach(el=>el.addEventListener("click",()=>toggle(el.dataset.id)));
+}
+
+function renderPipes(){
+  const blocks = currentBlocks();
+  const groups = [
+    {key:"music", title:"Pipeline A — Music production", blocks:blocks.filter(b=>b.kind!=="commerce")},
+    {key:"commerce", title:"Pipeline B — Design &amp; commerce", blocks:blocks.filter(b=>b.kind==="commerce")},
+  ].filter(g=>g.blocks.length);
+  let clock = {}; let t = toMin(MODES[state.mode].start);
+  blocks.forEach(b=>{ clock[b.id]=[t,t+b.mins]; t+=b.mins; });
+
+  document.getElementById("pipes").innerHTML = groups.map(g=>{
+    const n = g.blocks.filter(b=>b.kind!=="rest").length;
+    const d = g.blocks.filter(b=>b.kind!=="rest"&&state.done[b.id]).length;
+    return '<section class="pipe"><header><span class="rail '+g.key+'"></span><h2>'+g.title+'</h2>'+
+      '<span class="count mono">'+d+'/'+n+' · '+dur(g.blocks.filter(b=>b.kind!=="rest").reduce((s,b)=>s+b.mins,0))+'</span></header>'+
+      '<ul class="rows">'+ g.blocks.map(b=>{
+        const on = !!state.done[b.id], rest = b.kind==="rest";
+        return '<li class="row '+(on?"is-done ":"")+(rest?"rest-row":"")+'">'+
+          (rest
+            ? '<span></span>'
+            : '<label class="box"><input type="checkbox" id="chk-'+b.id+'" data-id="'+b.id+'"'+(on?" checked":"")+
+              ' aria-label="'+b.steps+' '+b.task.replace(/&amp;/g,"and").replace(/"/g,"")+'"><span class="tickbox"></span></label>')+
+          '<span class="chip '+b.kind+'">'+b.steps+'</span>'+
+          '<div><div class="task">'+b.task+'</div>'+
+            '<div class="sub">'+b.tool+(b.note?' &nbsp;·&nbsp; <i>'+b.note+'</i>':'')+'</div>'+
+            (b.gate?'<span class="gate"><b>'+b.gate.split(" · ")[0]+'</b> '+b.gate.split(" · ")[1]+'</span>':'')+
+          '</div>'+
+          '<div class="clock">'+hhmm(clock[b.id][0])+' – '+hhmm(clock[b.id][1])+'<span class="dur">'+dur(b.mins)+'</span></div>'+
+        '</li>';
+      }).join("") + '</ul></section>';
+  }).join("");
+  document.getElementById("pipes").querySelectorAll("input[type=checkbox]")
+    .forEach(el=>el.addEventListener("change",()=>toggle(el.dataset.id)));
+}
+
+function renderHistory(){
+  const box = document.getElementById("hist"), lab = document.getElementById("histlab");
+  const empty = document.getElementById("histempty");
+  const rows = history.slice(-14);
+  if(!rows.length){ box.innerHTML=""; lab.innerHTML=""; empty.hidden=false; return; }
+  empty.hidden = true;
+  box.innerHTML = rows.map(r=>'<div class="hbar" title="'+r.day+' — '+r.pct+'% complete"><i style="height:'+Math.max(3,r.pct)+'%"></i></div>').join("");
+  lab.innerHTML = rows.map(r=>'<span>'+r.day.slice(8)+'</span>').join("");
+}
+
+function renderAll(){ renderMeters(); renderRuler(); renderPipes(); renderHistory(); }
+
+/* ----------------------------------------------------------------- state */
+function toggle(id){
+  const b = currentBlocks().find(x=>x.id===id);
+  if(!b || b.kind==="rest") return;
+  state.done[id] = !state.done[id];
+  if(!state.done[id]) delete state.done[id];
+  renderAll(); save();
+}
+
+function setMode(m){
+  state.mode = m;
+  document.querySelectorAll(".seg button").forEach(btn=>btn.setAttribute("aria-pressed", String(btn.dataset.mode===m)));
+  renderAll(); save();
+}
+
+function localSave(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+function localLoad(){ try{ const v=localStorage.getItem(KEY); if(v) return JSON.parse(v); }catch(e){} return null; }
+
+function save(){
+  localSave();
+  const s = document.getElementById("status");
+  if(!docRef){ s.textContent = "saved on this device"; return; }
+  s.textContent = "saving…";
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(async ()=>{
+    const n = stepCount(), d = doneCount();
+    try{
+      await docRef.set({
+        day: todayKey(), mode: state.mode, done: state.done, note: state.note,
+        blocks: n, completed: d, pct: n ? Math.round(d/n*100) : 0,
+        minutes: doneMins(), updatedAt: new Date().toISOString()
+      });
+      s.textContent = "saved";
+      setTimeout(()=>{ if(s.textContent==="saved") s.textContent=""; }, 2200);
+    }catch(err){
+      s.textContent = (err && err.code==="quota_exceeded") ? "storage full — saved on this device" : "saved on this device";
+    }
+  }, 600);
+}
+
+/* ------------------------------------------------------------------ boot */
+function stamp(){
+  const d = new Date();
+  document.getElementById("today").textContent = todayKey();
+  document.getElementById("weekday").textContent =
+    d.toLocaleDateString(undefined,{weekday:"long", day:"numeric", month:"long"});
+}
+
+document.querySelectorAll(".seg button").forEach(b=>b.addEventListener("click",()=>setMode(b.dataset.mode)));
+document.getElementById("reset").addEventListener("click",()=>{
+  state.done = {}; renderAll(); save();
+});
+const noteEl = document.getElementById("note");
+noteEl.addEventListener("input",()=>{ state.note = noteEl.value; save(); });
+
+stamp();
+const cached = localLoad();
+if(cached){ state = Object.assign(state, cached); noteEl.value = state.note || "";
+  document.querySelectorAll(".seg button").forEach(btn=>btn.setAttribute("aria-pressed", String(btn.dataset.mode===state.mode))); }
+renderAll();
+
+(async ()=>{
+  try{
+    db = await (window.claude && window.claude.use ? window.claude.use("db") : null);
+  }catch(e){ db = null; }
+  if(!db) return;
+  document.getElementById("sync").textContent = "synced across your devices";
+  docRef = db.doc("runs/" + todayKey());
+  try{
+    const snap = await docRef.get();
+    if(snap.exists){
+      const v = snap.data() || {};
+      state.mode = MODES[v.mode] ? v.mode : state.mode;
+      state.done = (v.done && typeof v.done === "object") ? v.done : state.done;
+      state.note = typeof v.note === "string" ? v.note : state.note;
+      noteEl.value = state.note || "";
+      document.querySelectorAll(".seg button").forEach(btn=>btn.setAttribute("aria-pressed", String(btn.dataset.mode===state.mode)));
+      renderAll();
+    }
+    const q = await db.collection("runs").orderBy("day","asc").limit(30).get();
+    history = q.docs.map(x=>{ const v=x.data()||{}; return {day: String(v.day||x.id), pct: Number(v.pct)||0}; });
+    renderHistory();
+  }catch(e){ /* keep the local view */ }
+})();
+</script>
+
+</body></html>
