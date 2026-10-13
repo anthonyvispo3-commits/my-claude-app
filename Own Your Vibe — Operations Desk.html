@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Own Your Vibe — Operations Desk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,75..125,400..800;1,75..125,400..700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F2F0F5;
+  --surface:#FFFFFF;
+  --surface-2:#F8F6FB;
+  --ink:#191324;
+  --muted:#6C6480;
+  --line:#E3DEEC;
+  --vibe:#6E32C8;
+  --vibe-ink:#FFFFFF;
+  --vibe-soft:#EFE7FC;
+  --good:#11704F;
+  --good-soft:#E1F3EB;
+  --warn:#B4441B;
+  --warn-soft:#FBE9E0;
+  --shadow:0 1px 0 rgba(25,19,36,.06);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#111016; --surface:#1A1722; --surface-2:#221E2D; --ink:#EFECF5;
+    --muted:#9C94AC; --line:#302A3C; --vibe:#B48CF5; --vibe-ink:#1A1722;
+    --vibe-soft:#2B2040; --good:#58D2A6; --good-soft:#18342B; --warn:#F08A54;
+    --warn-soft:#3A2419; --shadow:0 1px 0 rgba(0,0,0,.4);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#111016; --surface:#1A1722; --surface-2:#221E2D; --ink:#EFECF5;
+  --muted:#9C94AC; --line:#302A3C; --vibe:#B48CF5; --vibe-ink:#1A1722;
+  --vibe-soft:#2B2040; --good:#58D2A6; --good-soft:#18342B; --warn:#F08A54;
+  --warn-soft:#3A2419; --shadow:0 1px 0 rgba(0,0,0,.4);
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:"Archivo","Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size:15px;
+  line-height:1.5;
+  font-variant-numeric:tabular-nums;
+  -webkit-font-smoothing:antialiased;
+}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:var(--vibe)}
+:focus-visible{outline:2px solid var(--vibe);outline-offset:2px;border-radius:3px}
+
+/* ---------- shell ---------- */
+.shell{display:flex;min-height:100vh}
+.rail{
+  width:228px;flex:0 0 228px;background:var(--surface);
+  border-right:1px solid var(--line);display:flex;flex-direction:column;
+  position:sticky;top:0;height:100vh;
+}
+.brand{padding:22px 20px 16px;border-bottom:1px solid var(--line)}
+.brand b{
+  display:block;font-weight:800;font-stretch:118%;letter-spacing:-.02em;
+  font-size:19px;line-height:1.1;
+}
+.brand span{display:block;color:var(--muted);font-size:12.5px;margin-top:4px}
+nav{padding:10px 10px;flex:1;overflow:auto}
+nav button{
+  display:flex;align-items:center;gap:10px;width:100%;text-align:left;
+  background:none;border:0;padding:9px 10px;border-radius:8px;cursor:pointer;
+  color:var(--muted);font-weight:500;
+}
+nav button:hover{background:var(--surface-2);color:var(--ink)}
+nav button[aria-current="true"]{background:var(--vibe-soft);color:var(--vibe);font-weight:600}
+nav .ico{width:18px;text-align:center;font-size:14px}
+.railfoot{padding:12px 16px;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}
+.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--good);margin-right:6px;vertical-align:1px}
+.dot.local{background:var(--warn)}
+
+main{flex:1;min-width:0;display:flex;flex-direction:column}
+.topbar{
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  padding:18px 26px;border-bottom:1px solid var(--line);
+  background:var(--surface);position:sticky;top:0;z-index:5;
+}
+.topbar h1{margin:0;font-size:20px;font-weight:700;font-stretch:112%;letter-spacing:-.015em}
+.topbar .sub{color:var(--muted);font-size:13px;margin-left:2px}
+.spacer{flex:1}
+.view{padding:26px;max-width:1180px;width:100%}
+
+/* ---------- controls ---------- */
+.btn{
+  background:var(--surface);border:1px solid var(--line);border-radius:8px;
+  padding:7px 13px;cursor:pointer;font-weight:500;box-shadow:var(--shadow);
+}
+.btn:hover{border-color:var(--muted)}
+.btn.primary{background:var(--vibe);color:var(--vibe-ink);border-color:var(--vibe)}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn.ghost{background:none;box-shadow:none;border-color:transparent;color:var(--muted)}
+.btn.ghost:hover{color:var(--ink);background:var(--surface-2)}
+.btn.sm{padding:4px 9px;font-size:13px}
+select,input[type=text],input[type=number],input[type=date],input[type=email],textarea{
+  background:var(--surface);border:1px solid var(--line);border-radius:8px;
+  padding:7px 10px;width:100%;
+}
+input[type=checkbox]{width:16px;height:16px;accent-color:var(--vibe)}
+
+/* ---------- panels ---------- */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;margin-bottom:18px}
+.panel > h2{
+  margin:0;padding:14px 18px;border-bottom:1px solid var(--line);
+  font-size:14px;font-weight:600;letter-spacing:.005em;display:flex;align-items:center;gap:10px;
+}
+.panel > h2 .note{font-weight:400;color:var(--muted);font-size:12.5px}
+.panel .body{padding:18px}
+.grid{display:grid;gap:18px}
+@media(min-width:760px){ .grid.two{grid-template-columns:1fr 1fr} }
+
+/* ---------- hero coverage ---------- */
+.runrate{padding:22px 24px}
+.runrate .lede{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.runrate .big{
+  font-size:clamp(34px,7vw,52px);font-weight:800;font-stretch:120%;
+  letter-spacing:-.03em;line-height:1;
+}
+.runrate .verdict{font-size:14px;color:var(--muted);max-width:52ch}
+.track{height:14px;border-radius:7px;background:var(--surface-2);border:1px solid var(--line);margin:18px 0 8px;overflow:hidden;position:relative}
+.track .fill{height:100%;background:var(--vibe);transition:width .35s ease}
+.track .fill.ok{background:var(--good)}
+.track .mark{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--ink);opacity:.5}
+.tracklabels{display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)}
+
+/* ---------- kpis ---------- */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--line);border-top:1px solid var(--line)}
+.kpi{background:var(--surface);padding:16px 18px}
+.kpi .v{font-size:23px;font-weight:700;font-stretch:108%;letter-spacing:-.02em}
+.kpi .l{color:var(--muted);font-size:12.5px;margin-top:3px}
+.kpi .d{font-size:12px;margin-top:5px}
+.up{color:var(--good)} .down{color:var(--warn)}
+
+/* ---------- tables ---------- */
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-weight:600;font-size:12.5px;color:var(--muted);background:var(--surface-2);position:sticky;top:0}
+td.num,th.num{text-align:right}
+tbody tr:hover{background:var(--surface-2)}
+tr.total td{font-weight:700;border-top:2px solid var(--line);background:var(--surface-2)}
+.tag{display:inline-block;padding:2px 8px;border-radius:99px;font-size:12px;font-weight:500;background:var(--surface-2);border:1px solid var(--line)}
+.tag.good{background:var(--good-soft);color:var(--good);border-color:transparent}
+.tag.warn{background:var(--warn-soft);color:var(--warn);border-color:transparent}
+.tag.vibe{background:var(--vibe-soft);color:var(--vibe);border-color:transparent}
+.rowact{opacity:.5}
+tr:hover .rowact{opacity:1}
+
+/* ---------- empty ---------- */
+.empty{padding:40px 24px;text-align:center;color:var(--muted)}
+.empty p{max-width:44ch;margin:6px auto 16px}
+
+/* ---------- chart ---------- */
+.chart{width:100%;height:190px;display:block}
+.chart .bar{fill:var(--vibe)}
+.chart .bar.dim{fill:var(--line)}
+.chart .lbl{fill:var(--muted);font-size:10px;font-family:inherit}
+.chart .ovl{stroke:var(--warn);stroke-width:1.5;stroke-dasharray:4 3}
+
+/* ---------- modal ---------- */
+.scrim{position:fixed;inset:0;background:rgba(15,10,25,.45);display:flex;align-items:flex-start;justify-content:center;padding:24px;overflow:auto;z-index:40}
+.sheet{background:var(--surface);border-radius:14px;border:1px solid var(--line);width:100%;max-width:560px;margin:auto}
+.sheet h3{margin:0;padding:16px 20px;border-bottom:1px solid var(--line);font-size:16px;font-weight:700}
+.sheet .fields{padding:18px 20px;display:grid;gap:14px}
+@media(min-width:560px){ .sheet .fields.two{grid-template-columns:1fr 1fr} }
+.field label{display:block;font-size:12.5px;color:var(--muted);margin-bottom:5px}
+.field .hint{font-size:12px;color:var(--muted);margin-top:4px}
+.field.span{grid-column:1/-1}
+.sheet footer{display:flex;gap:10px;justify-content:flex-end;padding:14px 20px;border-top:1px solid var(--line)}
+.inline{display:flex;align-items:center;gap:8px}
+
+/* ---------- toast ---------- */
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:22px;z-index:60;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none}
+.toast{background:var(--ink);color:var(--paper);padding:9px 16px;border-radius:99px;font-size:13.5px;box-shadow:0 6px 20px rgba(0,0,0,.2)}
+
+.callout{border:1px solid var(--line);border-left:3px solid var(--vibe);background:var(--surface-2);border-radius:8px;padding:12px 14px;font-size:13.5px;color:var(--muted)}
+.callout.warn{border-left-color:var(--warn)}
+.callout b{color:var(--ink)}
+.alerts{display:grid;gap:10px}
+
+@media(max-width:880px){
+  .shell{flex-direction:column}
+  .rail{width:auto;flex:none;height:auto;position:static;border-right:0;border-bottom:1px solid var(--line)}
+  .brand{padding:16px 18px 12px}
+  nav{display:flex;gap:6px;overflow-x:auto;padding:8px 12px}
+  nav button{width:auto;white-space:nowrap}
+  .railfoot{display:none}
+  .topbar{padding:14px 18px}
+  .view{padding:18px}
+}
+@media (prefers-reduced-motion: reduce){ *{transition:none !important} }
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="rail">
+    <div class="brand"><b>Own Your Vibe</b><span id="brandsub">Operations desk</span></div>
+    <nav id="nav"></nav>
+    <div class="railfoot"><span class="dot" id="statusdot"></span><span id="statustext">Connecting…</span></div>
+  </aside>
+  <main>
+    <div class="topbar">
+      <h1 id="mtitle">Dashboard</h1>
+      <span class="sub" id="msub"></span>
+      <span class="spacer"></span>
+      <span id="toolbar"></span>
+    </div>
+    <div class="view" id="view"></div>
+  </main>
+</div>
+<div id="modal"></div>
+<div id="toast"></div>
+
+<script>
+(function(){
+"use strict";
+
+/* ===================== defaults & state ===================== */
+const DEFAULTS = {
+  business:"Own Your Vibe",
+  currency:"USD",
+  processingRate:0.029,
+  processingFixed:0.30,
+  taxCoefficient:0.40,
+  taxRate:0.05,
+  ceilingEur:85000,
+  eurRate:1.146,            // units of base currency per 1 EUR
+  investorEnabled:false,
+  investorShare:0.30,
+  investorAmount:12000,
+  investorCapMultiple:2.0
+};
+
+const state = {
+  mode:"local",            // "db" once the store answers
+  loaded:false,
+  settings:{...DEFAULTS},
+  products:[],
+  orders:[],
+  overhead:[],
+  module:"dashboard",
+  period:null              // "YYYY-MM"
+};
+
+const MODULES = [
+  {id:"dashboard", label:"Dashboard", ico:"◎"},
+  {id:"orders",    label:"Orders",    ico:"▤"},
+  {id:"customers", label:"Customers", ico:"◍"},
+  {id:"catalogue", label:"Catalogue", ico:"⬡"},
+  {id:"overhead",  label:"Overhead",  ico:"≡"},
+  {id:"finance",   label:"Finance",   ico:"∑"},
+  {id:"settings",  label:"Settings",  ico:"⚙"}
+];
+
+/* ===================== storage layer ===================== */
+/* db when the viewer grants it, localStorage as a private fallback so the
+   page is never a dead end. Same interface either way. */
+let db = null;
+const LS_KEY = "oyv-erp-v1";
+
+function lsRead(){
+  try{ const raw = localStorage.getItem(LS_KEY); return raw ? JSON.parse(raw) : null; }
+  catch(e){ return null; }
+}
+function lsWrite(){
+  try{
+    localStorage.setItem(LS_KEY, JSON.stringify({
+      settings:state.settings, products:state.products,
+      orders:state.orders, overhead:state.overhead
+    }));
+  }catch(e){ /* storage may be unavailable; the session still works */ }
+}
+
+const COLLECTIONS = ["products","orders","overhead"];
+
+async function connect(){
+  try{ db = window.claude && window.claude.use ? await window.claude.use("db") : null; }
+  catch(e){ db = null; }
+
+  if(!db){
+    const local = lsRead();
+    if(local){
+      state.settings = {...DEFAULTS, ...(local.settings||{})};
+      state.products = local.products||[];
+      state.orders   = local.orders||[];
+      state.overhead = local.overhead||[];
+    }
+    state.mode="local"; state.loaded=true;
+    setStatus();
+    render();
+    return;
+  }
+
+  state.mode="db";
+  setStatus();
+
+  try{
+    const snap = await db.doc("config/settings").get();
+    if(snap && snap.exists) state.settings = {...DEFAULTS, ...(snap.data()||{})};
+  }catch(e){}
+
+  COLLECTIONS.forEach(name=>{
+    try{
+      db.collection(name).onSnapshot(
+        s=>{ state[name] = s.docs.map(d=>({id:d.id, ...(d.data()||{})})); state.loaded=true; render(); },
+        ()=>{ state.loaded=true; render(); }
+      );
+    }catch(e){}
+  });
+  try{
+    db.doc("config/settings").onSnapshot(s=>{
+      if(s && s.exists){ state.settings = {...DEFAULTS, ...(s.data()||{})}; render(); }
+    }, ()=>{});
+  }catch(e){}
+
+  state.loaded=true;
+  render();
+}
+
+async function saveDoc(collection, id, data){
+  const rec = {...data, id};
+  const arr = state[collection];
+  const i = arr.findIndex(x=>x.id===id);
+  if(i>=0) arr[i]=rec; else arr.push(rec);
+  render();
+  if(db){
+    try{ await db.doc(collection+"/"+id).set(data); }
+    catch(e){ toast("Could not save to the shared store"); }
+  } else lsWrite();
+}
+async function removeDoc(collection, id){
+  state[collection] = state[collection].filter(x=>x.id!==id);
+  render();
+  if(db){ try{ await db.doc(collection+"/"+id).delete(); }catch(e){ toast("Could not delete"); } }
+  else lsWrite();
+}
+async function saveSettings(patch){
+  state.settings = {...state.settings, ...patch};
+  render();
+  if(db){ try{ await db.doc("config/settings").set(state.settings); }catch(e){ toast("Could not save settings"); } }
+  else lsWrite();
+}
+
+function setStatus(){
+  const dot = document.getElementById("statusdot");
+  const txt = document.getElementById("statustext");
+  if(state.mode==="db"){ dot.className="dot"; txt.textContent="Saved to your workspace"; }
+  else { dot.className="dot local"; txt.textContent="This browser only"; }
+  document.getElementById("brandsub").textContent = state.settings.business === DEFAULTS.business
+    ? "Operations desk" : state.settings.business;
+}
+
+/* ===================== helpers ===================== */
+const uid = p => p+"-"+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const num = v => { const n = parseFloat(v); return isFinite(n) ? n : 0; };
+const esc = s => String(s==null?"":s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const S = () => state.settings;
+
+function fmt(v){
+  try{
+    return new Intl.NumberFormat(undefined,{style:"currency",currency:S().currency||"USD",maximumFractionDigits:2}).format(num(v));
+  }catch(e){ return (S().currency||"")+" "+num(v).toFixed(2); }
+}
+function fmt0(v){
+  try{
+    return new Intl.NumberFormat(undefined,{style:"currency",currency:S().currency||"USD",maximumFractionDigits:0}).format(num(v));
+  }catch(e){ return (S().currency||"")+" "+Math.round(num(v)); }
+}
+const pct = v => (num(v)*100).toFixed(1)+"%";
+const today = () => new Date().toISOString().slice(0,10);
+const thisMonth = () => new Date().toISOString().slice(0,7);
+function monthLabel(m){
+  if(!m) return "";
+  const [y,mm]=m.split("-");
+  const d=new Date(Date.UTC(+y,+mm-1,1));
+  return d.toLocaleDateString(undefined,{month:"short",year:"numeric",timeZone:"UTC"});
+}
+function toast(msg){
+  const t=document.createElement("div");
+  t.className="toast"; t.textContent=msg;
+  document.getElementById("toast").appendChild(t);
+  setTimeout(()=>t.remove(), 2600);
+}
+
+/* ---- economics ---- */
+const productById = id => state.products.find(p=>p.id===id);
+function unitCost(p){ return p ? num(p.baseCost)+num(p.printFees)+num(p.shipping) : 0; }
+function unitMargin(p){
+  if(!p) return 0;
+  const price=num(p.price);
+  const proc = price*num(S().processingRate)+num(S().processingFixed);
+  const tax  = price*num(S().taxCoefficient)*num(S().taxRate);
+  return price - unitCost(p) - proc - tax;
+}
+const liveOrder = o => o.status!=="refunded" && o.status!=="cancelled";
+
+function calc(o){
+  const p = productById(o.productId);
+  const qty = num(o.qty);
+  if(!liveOrder(o)) return {qty:0,gross:0,cogs:0,proc:0,tax:0,net:0,void:true};
+  const gross = Math.max(0, qty*num(o.unitPrice) - num(o.discount));
+  const cogs  = unitCost(p)*qty;
+  const proc  = gross>0 ? gross*num(S().processingRate)+num(S().processingFixed) : 0;
+  const tax   = gross*num(S().taxCoefficient)*num(S().taxRate);
+  return {qty, gross, cogs, proc, tax, net: gross-cogs-proc-tax, void:false};
+}
+const monthlyOverhead = () =>
+  state.overhead.filter(o=>o.active!==false).reduce((s,o)=>s+num(o.monthly),0);
+
+function monthsWithData(){
+  const set = new Set(state.orders.map(o=>(o.date||"").slice(0,7)).filter(Boolean));
+  set.add(thisMonth());
+  return [...set].sort().reverse();
+}
+function period(){
+  if(state.period) return state.period;
+  const m = monthsWithData();
+  return m[0] || thisMonth();
+}
+function monthTotals(m){
+  const t={units:0,gross:0,cogs:0,proc:0,tax:0,net:0,orders:0,refunds:0};
+  state.orders.forEach(o=>{
+    if((o.date||"").slice(0,7)!==m) return;
+    if(!liveOrder(o)){ t.refunds++; return; }
+    const c=calc(o);
+    t.units+=c.qty; t.gross+=c.gross; t.cogs+=c.cogs; t.proc+=c.proc; t.tax+=c.tax; t.net+=c.net; t.orders++;
+  });
+  return t;
+}
+function yearRevenue(y){
+  return state.orders.reduce((s,o)=>
+    (o.date||"").slice(0,4)===String(y) && liveOrder(o) ? s+calc(o).gross : s, 0);
+}
+function lifetimeRevenue(){
+  return state.orders.reduce((s,o)=> liveOrder(o) ? s+calc(o).gross : s, 0);
+}
+function investorPosition(){
+  const s=S();
+  const cap = num(s.investorAmount)*num(s.investorCapMultiple);
+  const accrued = Math.min(cap, lifetimeRevenue()*num(s.investorShare));
+  return {cap, accrued, remaining:Math.max(0,cap-accrued), share:num(s.investorShare), settled: accrued>=cap && cap>0};
+}
+function last12(){
+  const out=[]; const d=new Date();
+  for(let i=11;i>=0;i--){
+    const x=new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth()-i, 1));
+    out.push(x.toISOString().slice(0,7));
+  }
+  return out;
+}
+
+/* ===================== render ===================== */
+function render(){
+  setStatus();
+  renderNav();
+  const mod = MODULES.find(m=>m.id===state.module) || MODULES[0];
+  document.getElementById("mtitle").textContent = mod.label;
+  const v = document.getElementById("view");
+  const bar = document.getElementById("toolbar");
+  const sub = document.getElementById("msub");
+  sub.textContent=""; bar.innerHTML="";
+
+  if(!state.loaded){ v.innerHTML = `<div class="panel"><div class="empty">Loading your data…</div></div>`; return; }
+
+  ({dashboard:viewDashboard, orders:viewOrders, customers:viewCustomers,
+    catalogue:viewCatalogue, overhead:viewOverhead, finance:viewFinance,
+    settings:viewSettings}[mod.id])(v, bar, sub);
+}
+
+function renderNav(){
+  document.getElementById("nav").innerHTML = MODULES.map(m=>`
+    <button data-act="go" data-mod="${m.id}" aria-current="${m.id===state.module}">
+      <span class="ico">${m.ico}</span>${m.label}
+    </button>`).join("");
+}
+
+function periodPicker(){
+  const ms = monthsWithData();
+  return `<select data-act="period" style="width:auto">${
+    ms.map(m=>`<option value="${m}" ${m===period()?"selected":""}>${monthLabel(m)}</option>`).join("")
+  }</select>`;
+}
+
+/* ---------- dashboard ---------- */
+function viewDashboard(v, bar, sub){
+  bar.innerHTML = periodPicker();
+  const m = period();
+  const t = monthTotals(m);
+  const oh = monthlyOverhead();
+  const cash = t.net - oh;
+  const coverage = oh>0 ? t.net/oh : (t.net>0?1:0);
+  const covPct = Math.min(100, Math.max(0, coverage*100));
+  sub.textContent = `${state.orders.length} orders on file`;
+
+  const avgMargin = t.units>0 ? t.net/t.units : avgUnitMargin();
+  const beUnits = avgMargin>0 ? Math.ceil(oh/avgMargin) : null;
+
+  const verdict = oh<=0
+    ? "Add your fixed costs in Overhead and this becomes a live break-even reading."
+    : cash>=0
+      ? `Every fixed cost is paid and ${fmt(cash)} is left over.`
+      : `${fmt(-cash)} short of covering the fixed costs${beUnits?` — about ${Math.max(0,beUnits-t.units)} more units at your current margin`:""}.`;
+
+  const year = m.slice(0,4);
+  const revEur = yearRevenue(year)/ (num(S().eurRate)||1);
+  const ceilPct = Math.min(100, (revEur/num(S().ceilingEur))*100);
+
+  const inv = investorPosition();
+
+  v.innerHTML = `
+    <div class="panel">
+      <div class="runrate">
+        <div class="lede">
+          <div class="big">${fmt0(t.net)}</div>
+          <div class="verdict">take-home in ${monthLabel(m)} against ${fmt(oh)} of fixed costs. ${esc(verdict)}</div>
+        </div>
+        <div class="track">
+          <div class="fill ${coverage>=1?"ok":""}" style="width:${covPct}%"></div>
+          ${coverage>1?`<div class="mark" style="left:${(1/coverage)*100}%"></div>`:""}
+        </div>
+        <div class="tracklabels"><span>${covPct.toFixed(0)}% of the run rate covered</span><span>${fmt(oh)}</span></div>
+      </div>
+      <div class="kpis">
+        ${kpi(fmt(t.gross), "Revenue", `${t.orders} orders`)}
+        ${kpi(String(t.units), "Units shipped", t.refunds?`${t.refunds} refunded`:"no refunds")}
+        ${kpi(fmt(t.cogs+t.proc), "Production & fees", `${t.gross>0?pct((t.cogs+t.proc)/t.gross):"—"} of revenue`)}
+        ${kpi(fmt(t.tax), "Tax set aside", `${pct(num(S().taxCoefficient)*num(S().taxRate))} of revenue`)}
+        ${kpi(fmt(cash), "Cash after overhead", cash>=0?"run rate covered":"shortfall")}
+      </div>
+    </div>
+
+    <div class="grid two">
+      <div class="panel">
+        <h2>Twelve-month revenue <span class="note">dashed line = monthly fixed costs</span></h2>
+        <div class="body">${chart12()}</div>
+      </div>
+      <div class="panel">
+        <h2>Watch list</h2>
+        <div class="body alerts">${alerts(t, oh, beUnits, ceilPct, revEur, inv)}</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>What sold in ${monthLabel(m)}</h2>
+      ${topProducts(m)}
+    </div>`;
+}
+
+function kpi(v,l,d){ return `<div class="kpi"><div class="v">${v}</div><div class="l">${l}</div><div class="d" style="color:var(--muted)">${d}</div></div>`; }
+
+function avgUnitMargin(){
+  const act = state.products.filter(p=>p.active!==false);
+  if(!act.length) return 0;
+  return act.reduce((s,p)=>s+unitMargin(p),0)/act.length;
+}
+
+function chart12(){
+  const months = last12();
+  const data = months.map(m=>({m, ...monthTotals(m)}));
+  const oh = monthlyOverhead();
+  const max = Math.max(oh*1.2, ...data.map(d=>d.gross), 1);
+  const W=520, H=170, pad=22, bw=(W-pad*2)/12;
+  const y = v => H-pad-(v/max)*(H-pad*2);
+  const bars = data.map((d,i)=>{
+    const h = Math.max(1, (d.gross/max)*(H-pad*2));
+    return `<rect class="bar ${d.gross?"":"dim"}" x="${pad+i*bw+bw*0.18}" y="${H-pad-h}" width="${bw*0.64}" height="${h}" rx="2"><title>${monthLabel(d.m)}: ${fmt(d.gross)}</title></rect>`;
+  }).join("");
+  const labels = data.map((d,i)=>
+    `<text class="lbl" x="${pad+i*bw+bw/2}" y="${H-7}" text-anchor="middle">${d.m.slice(5)}</text>`).join("");
+  const line = oh>0 ? `<line class="ovl" x1="${pad}" x2="${W-pad}" y1="${y(oh)}" y2="${y(oh)}"/>` : "";
+  return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Revenue by month">${bars}${line}${labels}</svg>`;
+}
+
+function alerts(t, oh, beUnits, ceilPct, revEur, inv){
+  const out=[];
+  if(!state.products.length) out.push(box("Your catalogue is empty.","Add a product so orders can calculate cost and margin.",true));
+  if(!state.overhead.length) out.push(box("No fixed costs recorded.","Break-even stays blank until the overhead ledger has your software, legal and studio costs.",true));
+  if(beUnits) out.push(box(`Break-even is ${beUnits} units a month.`, `At your current average take-home of ${fmt(t.units>0?t.net/t.units:avgUnitMargin())} per unit.`));
+  out.push(box(`Flat-rate ceiling: ${pct(ceilPct/100)} used.`,
+    `€${Math.round(revEur).toLocaleString()} of the €${num(S().ceilingEur).toLocaleString()} regime forfettario limit for ${period().slice(0,4)}.`,
+    ceilPct>80));
+  const unredeemed = state.orders.filter(o=>liveOrder(o) && o.codeRedeemed===false).length;
+  if(unredeemed) out.push(box(`${unredeemed} music downloads unredeemed.`,"Buyers who never claimed the track are the ones to follow up with."));
+  if(S().investorEnabled){
+    out.push(box(`Investor has earned ${fmt(inv.accrued)} of a ${fmt(inv.cap)} cap.`,
+      inv.settled ? "The cap is reached — payments stop here." : `${fmt(inv.remaining)} still to run.`, inv.settled));
+  }
+  if(t.refunds) out.push(box(`${t.refunds} refunded or cancelled this month.`,"Excluded from revenue, margin and tax.",true));
+  return out.join("");
+}
+function box(title, body, warn){
+  return `<div class="callout ${warn?"warn":""}"><b>${esc(title)}</b><br>${esc(body)}</div>`;
+}
+
+function topProducts(m){
+  const rows={};
+  state.orders.forEach(o=>{
+    if((o.date||"").slice(0,7)!==m || !liveOrder(o)) return;
+    const p=productById(o.productId); const key=o.productId||"—";
+    const c=calc(o);
+    rows[key]=rows[key]||{name:p?p.name:"Unlinked product", units:0, gross:0, net:0};
+    rows[key].units+=c.qty; rows[key].gross+=c.gross; rows[key].net+=c.net;
+  });
+  const list=Object.values(rows).sort((a,b)=>b.gross-a.gross);
+  if(!list.length) return `<div class="empty"><p>No orders logged for ${monthLabel(m)} yet.</p><button class="btn primary" data-act="neworder">Log an order</button></div>`;
+  return `<div class="scroll"><table><thead><tr>
+    <th>Product</th><th class="num">Units</th><th class="num">Revenue</th><th class="num">Take-home</th><th class="num">Margin</th>
+    </tr></thead><tbody>${list.map(r=>`<tr>
+      <td>${esc(r.name)}</td><td class="num">${r.units}</td><td class="num">${fmt(r.gross)}</td>
+      <td class="num">${fmt(r.net)}</td><td class="num">${r.gross?pct(r.net/r.gross):"—"}</td>
+    </tr>`).join("")}</tbody></table></div>`;
+}
+
+/* ---------- orders ---------- */
+function viewOrders(v, bar, sub){
+  bar.innerHTML = `${periodPicker()}
+    <button class="btn sm ghost" data-act="csv-orders">Copy as CSV</button>
+    <button class="btn primary sm" data-act="neworder">Log order</button>`;
+  const m = period();
+  const list = state.orders.filter(o=>(o.date||"").slice(0,7)===m)
+                           .sort((a,b)=>(b.date||"").localeCompare(a.date||""));
+  const t = monthTotals(m);
+  sub.textContent = `${list.length} in ${monthLabel(m)}`;
+
+  if(!list.length){
+    v.innerHTML = `<div class="panel"><div class="empty">
+      <p>Nothing logged for ${monthLabel(m)}. Every order you add here feeds the dashboard, the tax set-aside and the break-even reading.</p>
+      <button class="btn primary" data-act="neworder">Log the first order</button></div></div>`;
+    return;
+  }
+  v.innerHTML = `<div class="panel"><div class="scroll"><table>
+    <thead><tr>
+      <th>Date</th><th>Ref</th><th>Customer</th><th>Product</th>
+      <th class="num">Qty</th><th class="num">Revenue</th><th class="num">Cost</th>
+      <th class="num">Fees</th><th class="num">Tax</th><th class="num">Take-home</th>
+      <th>Status</th><th></th>
+    </tr></thead><tbody>
+    ${list.map(o=>{
+      const c=calc(o); const p=productById(o.productId);
+      return `<tr>
+        <td>${esc(o.date)}</td>
+        <td>${esc(o.ref||"—")}</td>
+        <td>${esc(o.customer||"—")}${o.country?` <span class="tag">${esc(o.country)}</span>`:""}</td>
+        <td>${p?esc(p.name):"<span class='tag warn'>unlinked</span>"}${o.variant?` · ${esc(o.variant)}`:""}</td>
+        <td class="num">${num(o.qty)}</td>
+        <td class="num">${c.void?"—":fmt(c.gross)}</td>
+        <td class="num">${c.void?"—":fmt(c.cogs)}</td>
+        <td class="num">${c.void?"—":fmt(c.proc)}</td>
+        <td class="num">${c.void?"—":fmt(c.tax)}</td>
+        <td class="num"><b>${c.void?"—":fmt(c.net)}</b></td>
+        <td>${statusTag(o.status)}${o.codeRedeemed===false?` <span class="tag warn">code unclaimed</span>`:""}</td>
+        <td class="rowact">
+          <button class="btn sm ghost" data-act="editorder" data-id="${o.id}">Edit</button>
+          <button class="btn sm ghost" data-act="delorder" data-id="${o.id}">Delete</button>
+        </td></tr>`;
+    }).join("")}
+    <tr class="total">
+      <td colspan="4">${monthLabel(m)} total</td>
+      <td class="num">${t.units}</td><td class="num">${fmt(t.gross)}</td><td class="num">${fmt(t.cogs)}</td>
+      <td class="num">${fmt(t.proc)}</td><td class="num">${fmt(t.tax)}</td><td class="num">${fmt(t.net)}</td>
+      <td colspan="2"></td>
+    </tr></tbody></table></div></div>`;
+}
+function statusTag(s){
+  const map={paid:"vibe",fulfilled:"good",refunded:"warn",cancelled:"warn"};
+  return `<span class="tag ${map[s]||""}">${esc(s||"paid")}</span>`;
+}
+
+/* ---------- customers ---------- */
+function viewCustomers(v, bar, sub){
+  bar.innerHTML = `<button class="btn sm ghost" data-act="csv-customers">Copy as CSV</button>`;
+  const map={};
+  state.orders.forEach(o=>{
+    const key=(o.email||o.customer||"").trim().toLowerCase();
+    if(!key) return;
+    const c=calc(o);
+    map[key]=map[key]||{name:o.customer||o.email,email:o.email||"",country:o.country||"",orders:0,units:0,gross:0,last:""};
+    const r=map[key];
+    if(!o.email && r.email) {} else if(o.email) r.email=o.email;
+    if(o.country) r.country=o.country;
+    if(liveOrder(o)){ r.orders++; r.units+=c.qty; r.gross+=c.gross; }
+    if((o.date||"")>r.last) r.last=o.date||"";
+  });
+  const list=Object.values(map).sort((a,b)=>b.gross-a.gross);
+  sub.textContent = `${list.length} on the list`;
+  const repeat = list.filter(c=>c.orders>1).length;
+
+  if(!list.length){
+    v.innerHTML=`<div class="panel"><div class="empty"><p>Customers build themselves from the orders you log — add a name or email on an order and they appear here.</p>
+      <button class="btn primary" data-act="neworder">Log an order</button></div></div>`;
+    return;
+  }
+  v.innerHTML = `
+    <div class="panel"><div class="kpis" style="border-top:0">
+      ${kpi(String(list.length),"Customers","unique buyers")}
+      ${kpi(String(repeat),"Repeat buyers", list.length?pct(repeat/list.length)+" of the list":"—")}
+      ${kpi(fmt(list.reduce((s,c)=>s+c.gross,0)/list.length),"Average lifetime value","revenue per customer")}
+    </div></div>
+    <div class="panel"><div class="scroll"><table>
+    <thead><tr><th>Customer</th><th>Email</th><th>Country</th><th class="num">Orders</th>
+    <th class="num">Units</th><th class="num">Revenue</th><th>Last order</th></tr></thead><tbody>
+    ${list.map(c=>`<tr>
+      <td>${esc(c.name)}${c.orders>1?` <span class="tag good">repeat</span>`:""}</td>
+      <td>${esc(c.email||"—")}</td><td>${esc(c.country||"—")}</td>
+      <td class="num">${c.orders}</td><td class="num">${c.units}</td>
+      <td class="num">${fmt(c.gross)}</td><td>${esc(c.last||"—")}</td>
+    </tr>`).join("")}</tbody></table></div></div>`;
+}
+
+/* ---------- catalogue ---------- */
+function viewCatalogue(v, bar, sub){
+  bar.innerHTML = `<button class="btn primary sm" data-act="newproduct">Add product</button>`;
+  sub.textContent = `${state.products.length} products`;
+  if(!state.products.length){
+    v.innerHTML=`<div class="panel"><div class="empty">
+      <p>Add each garment with its cost build-up — blank garment, extra print positions, the sleeve QR, shipping. Margin and break-even follow from it.</p>
+      <button class="btn primary" data-act="newproduct">Add the first product</button></div></div>`;
+    return;
+  }
+  const rows = state.products.map(p=>{
+    const marg=unitMargin(p);
+    const low = p.stock!=="" && p.stock!=null && num(p.stock)<=num(p.reorderAt||0);
+    return `<tr>
+      <td><b>${esc(p.name)}</b>${p.active===false?` <span class="tag">retired</span>`:""}${p.release?`<br><span style="color:var(--muted);font-size:12.5px">${esc(p.release)}</span>`:""}</td>
+      <td>${esc(p.sku||"—")}</td>
+      <td>${esc(p.sizes||"—")}<br><span style="color:var(--muted);font-size:12.5px">${esc(p.colorways||"")}</span></td>
+      <td class="num">${fmt(p.price)}</td>
+      <td class="num">${fmt(unitCost(p))}</td>
+      <td class="num"><b>${fmt(marg)}</b></td>
+      <td class="num">${num(p.price)?pct(marg/num(p.price)):"—"}</td>
+      <td>${p.stock===""||p.stock==null
+        ? `<span class="tag">made to order</span>`
+        : `<span class="tag ${low?"warn":"good"}">${num(p.stock)} in hand</span>`}</td>
+      <td class="rowact">
+        <button class="btn sm ghost" data-act="editproduct" data-id="${p.id}">Edit</button>
+        <button class="btn sm ghost" data-act="delproduct" data-id="${p.id}">Delete</button>
+      </td></tr>`;
+  }).join("");
+  v.innerHTML = `<div class="panel">
+    <h2>Products <span class="note">take-home is after production, payment fees and the flat-rate tax</span></h2>
+    <div class="scroll"><table><thead><tr>
+      <th>Product</th><th>SKU</th><th>Sizes & colours</th><th class="num">Price</th>
+      <th class="num">Unit cost</th><th class="num">Take-home</th><th class="num">Margin</th><th>Stock</th><th></th>
+    </tr></thead><tbody>${rows}</tbody></table></div></div>`;
+}
+
+/* ---------- overhead ---------- */
+function viewOverhead(v, bar, sub){
+  bar.innerHTML = `<button class="btn primary sm" data-act="newoverhead">Add cost</button>`;
+  const total = monthlyOverhead();
+  sub.textContent = `${fmt(total)} a month`;
+  if(!state.overhead.length){
+    v.innerHTML=`<div class="panel"><div class="empty">
+      <p>Every fixed cost of the business, as a monthly figure. Annual fees go in divided by twelve so the run rate stays honest.</p>
+      <button class="btn primary" data-act="newoverhead">Add the first cost</button></div></div>`;
+    return;
+  }
+  const groups={};
+  state.overhead.forEach(o=>{ (groups[o.group||"Other"]=groups[o.group||"Other"]||[]).push(o); });
+  const gsum = Object.entries(groups).map(([g,items])=>({g, m:items.reduce((s,i)=>s+(i.active!==false?num(i.monthly):0),0)}))
+                 .sort((a,b)=>b.m-a.m);
+
+  v.innerHTML = `
+    <div class="panel"><div class="kpis" style="border-top:0">
+      ${kpi(fmt(total),"Monthly run rate","every fixed cost")}
+      ${kpi(fmt(total*12),"Annual run rate","")}
+      ${kpi(avgUnitMargin()>0?String(Math.ceil(total/avgUnitMargin())):"—","Units to break even","at your average take-home")}
+    </div></div>
+    <div class="panel"><h2>By group</h2><div class="scroll"><table>
+      <thead><tr><th>Group</th><th class="num">Monthly</th><th class="num">Annual</th><th class="num">Share</th></tr></thead>
+      <tbody>${gsum.map(r=>`<tr><td>${esc(r.g)}</td><td class="num">${fmt(r.m)}</td>
+        <td class="num">${fmt(r.m*12)}</td><td class="num">${total?pct(r.m/total):"—"}</td></tr>`).join("")}
+      <tr class="total"><td>Total</td><td class="num">${fmt(total)}</td><td class="num">${fmt(total*12)}</td><td class="num">100%</td></tr>
+      </tbody></table></div></div>
+    <div class="panel"><h2>Ledger</h2><div class="scroll"><table>
+      <thead><tr><th>Group</th><th>Cost</th><th class="num">Monthly</th><th class="num">Annual</th><th>What it is for</th><th></th></tr></thead>
+      <tbody>${state.overhead.slice().sort((a,b)=>(a.group||"").localeCompare(b.group||"")||num(b.monthly)-num(a.monthly)).map(o=>`
+        <tr style="${o.active===false?"opacity:.5":""}">
+          <td>${esc(o.group||"Other")}</td>
+          <td>${esc(o.item)}${o.active===false?` <span class="tag">paused</span>`:""}</td>
+          <td class="num">${fmt(o.monthly)}</td>
+          <td class="num">${fmt(num(o.monthly)*12)}</td>
+          <td style="white-space:normal;color:var(--muted);font-size:13px">${esc(o.role||"")}</td>
+          <td class="rowact">
+            <button class="btn sm ghost" data-act="editoverhead" data-id="${o.id}">Edit</button>
+            <button class="btn sm ghost" data-act="deloverhead" data-id="${o.id}">Delete</button>
+          </td></tr>`).join("")}
+      </tbody></table></div></div>`;
+}
+
+/* ---------- finance ---------- */
+function viewFinance(v, bar, sub){
+  const years=[...new Set(state.orders.map(o=>(o.date||"").slice(0,4)).filter(Boolean))].sort().reverse();
+  if(!years.length) years.push(thisMonth().slice(0,4));
+  const y = state.year && years.includes(state.year) ? state.year : years[0];
+  state.year=y;
+  bar.innerHTML = `<select data-act="year" style="width:auto">${years.map(x=>`<option ${x===y?"selected":""}>${x}</option>`).join("")}</select>
+    <button class="btn sm ghost" data-act="csv-finance">Copy as CSV</button>`;
+  sub.textContent = `financial year ${y}`;
+
+  const oh = monthlyOverhead();
+  const inv = investorPosition();
+  const months = Array.from({length:12},(_,i)=>`${y}-${String(i+1).padStart(2,"0")}`);
+  let run = 0, capLeft = S().investorEnabled ? inv.cap : 0, accrued = 0;
+  const rows = months.map(m=>{
+    const t = monthTotals(m);
+    let share = 0;
+    if(S().investorEnabled){
+      share = Math.min(Math.max(0, capLeft - accrued), t.gross*num(S().investorShare));
+      accrued += share;
+    }
+    const cash = t.net - oh - share;
+    run += cash;
+    return {m,t,share,cash,run};
+  });
+  const sum = k => rows.reduce((s,r)=>s+(k==="share"?r.share:k==="cash"?r.cash:r.t[k]),0);
+
+  v.innerHTML = `
+    <div class="panel"><div class="kpis" style="border-top:0">
+      ${kpi(fmt(sum("gross")),"Revenue",y)}
+      ${kpi(fmt(sum("net")),"Take-home before overhead","after cost, fees and tax")}
+      ${kpi(fmt(sum("tax")),"Tax to set aside",`${pct(num(S().taxCoefficient)*num(S().taxRate))} of revenue`)}
+      ${kpi(fmt(sum("cash")),"Cash retained","after overhead and investor")}
+    </div></div>
+
+    <div class="panel"><h2>Month by month</h2><div class="scroll"><table>
+      <thead><tr><th>Month</th><th class="num">Units</th><th class="num">Revenue</th><th class="num">Production</th>
+      <th class="num">Fees</th><th class="num">Tax</th><th class="num">Overhead</th>
+      ${S().investorEnabled?`<th class="num">Investor</th>`:""}<th class="num">Cash</th><th class="num">Running</th></tr></thead>
+      <tbody>${rows.map(r=>`<tr>
+        <td>${monthLabel(r.m)}</td><td class="num">${r.t.units}</td><td class="num">${fmt(r.t.gross)}</td>
+        <td class="num">${fmt(r.t.cogs)}</td><td class="num">${fmt(r.t.proc)}</td><td class="num">${fmt(r.t.tax)}</td>
+        <td class="num">${fmt(oh)}</td>${S().investorEnabled?`<td class="num">${fmt(r.share)}</td>`:""}
+        <td class="num" style="color:${r.cash<0?"var(--warn)":"inherit"}">${fmt(r.cash)}</td>
+        <td class="num"><b>${fmt(r.run)}</b></td></tr>`).join("")}
+        <tr class="total"><td>${y}</td><td class="num">${sum("units")}</td><td class="num">${fmt(sum("gross"))}</td>
+        <td class="num">${fmt(sum("cogs"))}</td><td class="num">${fmt(sum("proc"))}</td><td class="num">${fmt(sum("tax"))}</td>
+        <td class="num">${fmt(oh*12)}</td>${S().investorEnabled?`<td class="num">${fmt(sum("share"))}</td>`:""}
+        <td class="num">${fmt(sum("cash"))}</td><td class="num">${fmt(rows[11].run)}</td></tr>
+      </tbody></table></div></div>
+
+    <div class="grid two">
+      <div class="panel"><h2>Flat-rate tax position</h2><div class="body">
+        ${meter(yearRevenue(y)/(num(S().eurRate)||1), num(S().ceilingEur),
+          `€${Math.round(yearRevenue(y)/(num(S().eurRate)||1)).toLocaleString()} of €${num(S().ceilingEur).toLocaleString()}`,
+          "Regime forfettario revenue ceiling")}
+        <div class="callout" style="margin-top:14px">Tax accrued on ${y} revenue: <b>${fmt(sum("tax"))}</b>.
+        Calculated as revenue × ${pct(S().taxCoefficient)} profitability coefficient × ${pct(S().taxRate)} substitute rate.
+        Social contributions are not included here.</div>
+      </div></div>
+      <div class="panel"><h2>Investor position</h2><div class="body">
+        ${S().investorEnabled
+          ? meter(inv.accrued, inv.cap, `${fmt(inv.accrued)} of ${fmt(inv.cap)}`,
+              `${pct(inv.share)} of gross revenue until ${num(S().investorCapMultiple)}× of ${fmt(S().investorAmount)}`) +
+            `<div class="callout" style="margin-top:14px">${inv.settled
+              ? "The cap is reached. Revenue share stops and the full margin returns to the business."
+              : `${fmt(inv.remaining)} still to pay out. At the current run rate the share costs you ${fmt(sum("gross")*inv.share)} in ${y}.`}</div>`
+          : `<div class="empty" style="padding:20px 0"><p>No revenue share is active. Turn it on in Settings to model an investor against real sales.</p></div>`}
+      </div></div>
+    </div>`;
+}
+function meter(val, max, label, caption){
+  const p = max>0 ? Math.min(100,(val/max)*100) : 0;
+  return `<div class="tracklabels"><span>${esc(caption)}</span><span>${p.toFixed(0)}%</span></div>
+    <div class="track" style="margin:8px 0"><div class="fill ${p>=100?"ok":""}" style="width:${p}%"></div></div>
+    <div class="tracklabels"><span>${label}</span></div>`;
+}
+
+/* ---------- settings ---------- */
+function viewSettings(v, bar, sub){
+  const s=S();
+  sub.textContent = state.mode==="db" ? "saved to your workspace" : "saved in this browser";
+  v.innerHTML = `
+    <div class="panel"><h2>Business</h2><div class="body">
+      <div class="sheet"><div class="fields two" style="padding:0">
+        ${field("business","Business name","text",s.business)}
+        ${field("currency","Currency code","text",s.currency,"The code used for every figure on this page, e.g. USD or EUR.")}
+      </div></div>
+    </div></div>
+
+    <div class="panel"><h2>Costs and tax</h2><div class="body">
+      <div class="fields two" style="display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))">
+        ${field("processingRate","Payment processing rate","number",s.processingRate,"0.029 = 2.9% of each sale.")}
+        ${field("processingFixed","Fixed fee per order","number",s.processingFixed)}
+        ${field("taxCoefficient","Profitability coefficient","number",s.taxCoefficient,"0.40 for ATECO 47.91.10 under the flat-rate regime.")}
+        ${field("taxRate","Substitute tax rate","number",s.taxRate,"0.05 for the first five years of a new activity.")}
+        ${field("ceilingEur","Revenue ceiling (EUR)","number",s.ceilingEur)}
+        ${field("eurRate","Base currency per 1 EUR","number",s.eurRate,"Used only to check revenue against the EUR ceiling.")}
+      </div>
+      <div style="margin-top:16px"><button class="btn primary" data-act="savesettings">Save settings</button></div>
+    </div></div>
+
+    <div class="panel"><h2>Investor revenue share</h2><div class="body">
+      <label class="inline" style="margin-bottom:14px">
+        <input type="checkbox" id="f_investorEnabled" ${s.investorEnabled?"checked":""}> Model a revenue share against real sales
+      </label>
+      <div class="fields" style="display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))">
+        ${field("investorAmount","Investment","number",s.investorAmount)}
+        ${field("investorShare","Share of gross revenue","number",s.investorShare,"0.30 = 30%.")}
+        ${field("investorCapMultiple","Return cap (×)","number",s.investorCapMultiple)}
+      </div>
+      <div style="margin-top:16px"><button class="btn primary" data-act="savesettings">Save settings</button></div>
+    </div></div>
+
+    <div class="panel"><h2>Data</h2><div class="body">
+      <div class="callout">${state.mode==="db"
+        ? "Your records live in this artifact's own store — they survive reloads and are here on every device you open it from."
+        : "The shared store is not available in this view, so records are kept in this browser only. Open the artifact from your workspace to sync it."}</div>
+      <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn" data-act="csv-orders">Copy orders as CSV</button>
+        <button class="btn" data-act="csv-finance">Copy finance as CSV</button>
+      </div>
+    </div></div>`;
+}
+function field(name,label,type,val,hint){
+  return `<div class="field"><label for="f_${name}">${esc(label)}</label>
+    <input id="f_${name}" type="${type}" ${type==="number"?'step="any"':""} value="${esc(val)}">
+    ${hint?`<div class="hint">${esc(hint)}</div>`:""}</div>`;
+}
+
+/* ===================== modals ===================== */
+function closeModal(){ document.getElementById("modal").innerHTML=""; }
+function openModal(title, fieldsHtml, onSave, wide){
+  document.getElementById("modal").innerHTML = `
+    <div class="scrim" data-act="scrim"><div class="sheet">
+      <h3>${esc(title)}</h3>
+      <div class="fields ${wide?"two":""}">${fieldsHtml}</div>
+      <footer>
+        <button class="btn ghost" data-act="cancel">Cancel</button>
+        <button class="btn primary" data-act="save">Save</button>
+      </footer>
+    </div></div>`;
+  document.getElementById("modal").__save = onSave;
+  const first = document.querySelector(".sheet input, .sheet select");
+  if(first) first.focus();
+}
+const val = n => { const e=document.getElementById("f_"+n); return e ? (e.type==="checkbox"?e.checked:e.value) : ""; };
+
+function orderModal(existing){
+  const o = existing || {date:today(), qty:1, status:"paid", codeRedeemed:false};
+  const opts = state.products.map(p=>`<option value="${p.id}" ${p.id===o.productId?"selected":""}>${esc(p.name)} — ${fmt(p.price)}</option>`).join("");
+  openModal(existing?"Edit order":"Log an order", `
+    <div class="field">${lbl("date","Date")}<input id="f_date" type="date" value="${esc(o.date||today())}"></div>
+    <div class="field">${lbl("ref","Order reference")}<input id="f_ref" type="text" value="${esc(o.ref||"")}" placeholder="#1042"></div>
+    <div class="field">${lbl("customer","Customer")}<input id="f_customer" type="text" value="${esc(o.customer||"")}"></div>
+    <div class="field">${lbl("email","Email")}<input id="f_email" type="email" value="${esc(o.email||"")}"></div>
+    <div class="field span">${lbl("productId","Product")}
+      <select id="f_productId">${state.products.length?opts:`<option value="">Add a product first</option>`}</select></div>
+    <div class="field">${lbl("variant","Size & colour")}<input id="f_variant" type="text" value="${esc(o.variant||"")}" placeholder="L · Black"></div>
+    <div class="field">${lbl("country","Country")}<input id="f_country" type="text" value="${esc(o.country||"")}" placeholder="IT"></div>
+    <div class="field">${lbl("qty","Quantity")}<input id="f_qty" type="number" step="1" min="1" value="${esc(o.qty||1)}"></div>
+    <div class="field">${lbl("unitPrice","Unit price")}<input id="f_unitPrice" type="number" step="any" value="${esc(o.unitPrice!=null?o.unitPrice:"")}">
+      <div class="hint">Leave blank to use the catalogue price.</div></div>
+    <div class="field">${lbl("discount","Discount")}<input id="f_discount" type="number" step="any" value="${esc(o.discount||0)}"></div>
+    <div class="field">${lbl("status","Status")}<select id="f_status">
+      ${["paid","fulfilled","refunded","cancelled"].map(s=>`<option ${s===o.status?"selected":""}>${s}</option>`).join("")}
+    </select></div>
+    <div class="field span"><label class="inline"><input type="checkbox" id="f_codeRedeemed" ${o.codeRedeemed?"checked":""}> Music download claimed</label></div>
+  `, ()=>{
+    const pid = val("productId");
+    const p = productById(pid);
+    const price = val("unitPrice")==="" ? (p?num(p.price):0) : num(val("unitPrice"));
+    saveDoc("orders", o.id||uid("ord"), {
+      date:val("date")||today(), ref:val("ref"), customer:val("customer"), email:val("email"),
+      productId:pid, variant:val("variant"), country:val("country").toUpperCase(),
+      qty:Math.max(1,num(val("qty"))), unitPrice:price, discount:num(val("discount")),
+      status:val("status"), codeRedeemed:val("codeRedeemed")
+    });
+    toast(existing?"Order updated":"Order logged");
+  }, true);
+}
+const lbl = (n,t) => `<label for="f_${n}">${esc(t)}</label>`;
+
+function productModal(existing){
+  const p = existing || {active:true, stock:"", price:"", baseCost:"", printFees:"", shipping:""};
+  openModal(existing?"Edit product":"Add a product", `
+    <div class="field span">${lbl("name","Product name")}<input id="f_name" type="text" value="${esc(p.name||"")}" placeholder="Heavyweight Tee"></div>
+    <div class="field">${lbl("sku","SKU")}<input id="f_sku" type="text" value="${esc(p.sku||"")}"></div>
+    <div class="field">${lbl("release","Linked release")}<input id="f_release" type="text" value="${esc(p.release||"")}" placeholder="Drop 002"></div>
+    <div class="field">${lbl("sizes","Sizes")}<input id="f_sizes" type="text" value="${esc(p.sizes||"")}" placeholder="S · M · L · XL · XXL"></div>
+    <div class="field">${lbl("colorways","Colourways")}<input id="f_colorways" type="text" value="${esc(p.colorways||"")}" placeholder="White · Black · Purple"></div>
+    <div class="field">${lbl("price","Retail price")}<input id="f_price" type="number" step="any" value="${esc(p.price)}"></div>
+    <div class="field">${lbl("baseCost","Blank garment cost")}<input id="f_baseCost" type="number" step="any" value="${esc(p.baseCost)}"></div>
+    <div class="field">${lbl("printFees","Extra print fees")}<input id="f_printFees" type="number" step="any" value="${esc(p.printFees)}">
+      <div class="hint">Back print plus the sleeve QR, if the placement spec calls for them.</div></div>
+    <div class="field">${lbl("shipping","Shipping in the price")}<input id="f_shipping" type="number" step="any" value="${esc(p.shipping)}"></div>
+    <div class="field">${lbl("stock","Units in hand")}<input id="f_stock" type="number" step="1" value="${esc(p.stock)}">
+      <div class="hint">Leave blank for print-on-demand. Fill it in for a small-batch run.</div></div>
+    <div class="field">${lbl("reorderAt","Reorder at")}<input id="f_reorderAt" type="number" step="1" value="${esc(p.reorderAt||"")}"></div>
+    <div class="field span"><label class="inline"><input type="checkbox" id="f_active" ${p.active!==false?"checked":""}> Selling now</label></div>
+  `, ()=>{
+    saveDoc("products", p.id||uid("prd"), {
+      name:val("name")||"Untitled", sku:val("sku"), release:val("release"),
+      sizes:val("sizes"), colorways:val("colorways"),
+      price:num(val("price")), baseCost:num(val("baseCost")),
+      printFees:num(val("printFees")), shipping:num(val("shipping")),
+      stock: val("stock")==="" ? "" : num(val("stock")),
+      reorderAt: val("reorderAt")==="" ? "" : num(val("reorderAt")),
+      active: val("active")
+    });
+    toast(existing?"Product updated":"Product added");
+  }, true);
+}
+
+function overheadModal(existing){
+  const o = existing || {active:true};
+  const groups=[...new Set(state.overhead.map(x=>x.group).filter(Boolean))];
+  openModal(existing?"Edit cost":"Add a fixed cost", `
+    <div class="field">${lbl("group","Group")}<input id="f_group" type="text" list="ohgroups" value="${esc(o.group||"")}" placeholder="Store & Merch">
+      <datalist id="ohgroups">${groups.map(g=>`<option>${esc(g)}</option>`).join("")}</datalist></div>
+    <div class="field">${lbl("item","Cost")}<input id="f_item" type="text" value="${esc(o.item||"")}" placeholder="Shopify (Basic)"></div>
+    <div class="field">${lbl("monthly","Monthly amount")}<input id="f_monthly" type="number" step="any" value="${esc(o.monthly||"")}">
+      <div class="hint">Annual fees go in divided by twelve.</div></div>
+    <div class="field"><label class="inline" style="margin-top:22px"><input type="checkbox" id="f_active" ${o.active!==false?"checked":""}> Currently paying</label></div>
+    <div class="field span">${lbl("role","What it is for")}<input id="f_role" type="text" value="${esc(o.role||"")}"></div>
+  `, ()=>{
+    saveDoc("overhead", o.id||uid("ovh"), {
+      group:val("group")||"Other", item:val("item")||"Untitled",
+      monthly:num(val("monthly")), role:val("role"), active:val("active")
+    });
+    toast(existing?"Cost updated":"Cost added");
+  }, true);
+}
+
+/* ===================== csv ===================== */
+function csv(rows){
+  return rows.map(r=>r.map(c=>{
+    const s=String(c==null?"":c);
+    return /[",\n]/.test(s) ? '"'+s.replace(/"/g,'""')+'"' : s;
+  }).join(",")).join("\n");
+}
+function copy(text, what){
+  const done = ()=>toast(what+" copied to the clipboard");
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(done, ()=>fallback());
+  } else fallback();
+  function fallback(){
+    const ta=document.createElement("textarea");
+    ta.value=text; ta.style.position="fixed"; ta.style.opacity="0";
+    document.body.appendChild(ta); ta.select();
+    try{ document.execCommand("copy"); done(); }catch(e){ toast("Copy is blocked in this view"); }
+    ta.remove();
+  }
+}
+function csvOrders(){
+  const rows=[["Date","Ref","Customer","Email","Country","Product","Variant","Qty","Unit price","Discount","Revenue","Production","Fees","Tax","Take-home","Status"]];
+  state.orders.slice().sort((a,b)=>(a.date||"").localeCompare(b.date||"")).forEach(o=>{
+    const c=calc(o), p=productById(o.productId);
+    rows.push([o.date,o.ref,o.customer,o.email,o.country,p?p.name:"",o.variant,o.qty,o.unitPrice,o.discount,
+      c.gross.toFixed(2),c.cogs.toFixed(2),c.proc.toFixed(2),c.tax.toFixed(2),c.net.toFixed(2),o.status]);
+  });
+  copy(csv(rows),"Orders");
+}
+function csvCustomers(){
+  const map={};
+  state.orders.forEach(o=>{
+    const key=(o.email||o.customer||"").trim().toLowerCase(); if(!key) return;
+    const c=calc(o);
+    map[key]=map[key]||{name:o.customer||o.email,email:o.email||"",country:o.country||"",orders:0,units:0,gross:0,last:""};
+    const r=map[key];
+    if(liveOrder(o)){ r.orders++; r.units+=c.qty; r.gross+=c.gross; }
+    if((o.date||"")>r.last) r.last=o.date||"";
+  });
+  const rows=[["Customer","Email","Country","Orders","Units","Revenue","Last order"]];
+  Object.values(map).forEach(c=>rows.push([c.name,c.email,c.country,c.orders,c.units,c.gross.toFixed(2),c.last]));
+  copy(csv(rows),"Customers");
+}
+function csvFinance(){
+  const y=state.year||thisMonth().slice(0,4);
+  const oh=monthlyOverhead();
+  const rows=[["Month","Units","Revenue","Production","Fees","Tax","Overhead","Take-home","Cash"]];
+  for(let i=1;i<=12;i++){
+    const m=`${y}-${String(i).padStart(2,"0")}`, t=monthTotals(m);
+    rows.push([m,t.units,t.gross.toFixed(2),t.cogs.toFixed(2),t.proc.toFixed(2),t.tax.toFixed(2),oh.toFixed(2),t.net.toFixed(2),(t.net-oh).toFixed(2)]);
+  }
+  copy(csv(rows),"Finance");
+}
+
+/* ===================== events ===================== */
+document.addEventListener("click", e=>{
+  const el = e.target.closest("[data-act]");
+  if(!el) return;
+  const act = el.dataset.act;
+  const id = el.dataset.id;
+
+  if(act==="go"){ state.module = el.dataset.mod; state.period=null; render(); window.scrollTo(0,0); return; }
+  if(act==="scrim" && e.target===el){ closeModal(); return; }
+  if(act==="cancel"){ closeModal(); return; }
+  if(act==="save"){
+    const fn = document.getElementById("modal").__save;
+    closeModal();
+    if(fn) fn();
+    return;
+  }
+  if(act==="neworder"){ if(!state.products.length){ toast("Add a product first"); state.module="catalogue"; render(); return; } orderModal(null); return; }
+  if(act==="editorder"){ orderModal(state.orders.find(o=>o.id===id)); return; }
+  if(act==="delorder"){ if(confirm("Delete this order?")) removeDoc("orders", id); return; }
+  if(act==="newproduct"){ productModal(null); return; }
+  if(act==="editproduct"){ productModal(productById(id)); return; }
+  if(act==="delproduct"){ if(confirm("Delete this product? Orders linked to it keep their figures but lose the cost link.")) removeDoc("products", id); return; }
+  if(act==="newoverhead"){ overheadModal(null); return; }
+  if(act==="editoverhead"){ overheadModal(state.overhead.find(o=>o.id===id)); return; }
+  if(act==="deloverhead"){ if(confirm("Delete this cost?")) removeDoc("overhead", id); return; }
+  if(act==="csv-orders"){ csvOrders(); return; }
+  if(act==="csv-customers"){ csvCustomers(); return; }
+  if(act==="csv-finance"){ csvFinance(); return; }
+  if(act==="savesettings"){
+    saveSettings({
+      business:val("business")||"Own Your Vibe",
+      currency:(val("currency")||"USD").toUpperCase().slice(0,3),
+      processingRate:num(val("processingRate")),
+      processingFixed:num(val("processingFixed")),
+      taxCoefficient:num(val("taxCoefficient")),
+      taxRate:num(val("taxRate")),
+      ceilingEur:num(val("ceilingEur")),
+      eurRate:num(val("eurRate"))||1,
+      investorEnabled:val("investorEnabled"),
+      investorAmount:num(val("investorAmount")),
+      investorShare:num(val("investorShare")),
+      investorCapMultiple:num(val("investorCapMultiple"))
+    });
+    toast("Settings saved");
+    return;
+  }
+});
+document.addEventListener("change", e=>{
+  if(e.target.matches("[data-act=period]")){ state.period = e.target.value; render(); }
+  if(e.target.matches("[data-act=year]")){ state.year = e.target.value; render(); }
+});
+document.addEventListener("keydown", e=>{
+  if(e.key==="Escape") closeModal();
+});
+
+/* ===================== boot ===================== */
+render();
+connect();
+})();
+</script>
+</body>
+</html>
